@@ -34,53 +34,56 @@ class PlayerServiceTest {
     PlayerMapper playerMapper;
     PlayerRepository repository;
     List<Player> threePlayers;
+
     @BeforeEach
-    void setUp(){
+    void setUp() {
         playerMapper = Mappers.getMapper(PlayerMapper.class);
         repository = Mockito.mock(PlayerRepository.class);
-        service = new PlayerService(playerMapper,repository);
+        service = new PlayerService(playerMapper, repository);
         threePlayers = List.of(
-                new Player(1L,"testUserOne","test1@example.com","some nice bio", LocalDateTime.of(2026,9,20,12,0)),
-                new Player(2L,"testUserTwo","test2@example.com","some nice bio for second player", LocalDateTime.of(2026,9,21,13,0)),
-                new Player(3L,"testUserThree","test3@example.com","some nice bio for third player", LocalDateTime.of(2026,9,22,14,0))
+                new Player(1L, "testUserOne", "test1@example.com", "some nice bio", LocalDateTime.of(2026, 9, 20, 12, 0)),
+                new Player(2L, "testUserTwo", "test2@example.com", "some nice bio for second player", LocalDateTime.of(2026, 9, 21, 13, 0)),
+                new Player(3L, "testUserThree", "test3@example.com", "some nice bio for third player", LocalDateTime.of(2026, 9, 22, 14, 0))
 
         );
     }
 
     @Test
-    void findAll_WhenPageWithThreePlayerExists_ShouldReturnPageWithMatchingDto(){
+    void findAll_WhenPageWithThreePlayerExists_ShouldReturnPageWithMatchingDto() {
         //Given
-        Pageable pageable = PageRequest.of(0,20);
-        Page<Player> page = new PageImpl<>(threePlayers,pageable,3);
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<Player> page = new PageImpl<>(threePlayers, pageable, 3);
         doReturn(page).when(repository).findAll(pageable);
         //When
         Page<PlayerDto> result = service.findAll(pageable);
         //Then
         assertAll(
-                () -> assertEquals(3,result.getContent().size()),
-                () -> assertEquals(1L,result.getContent().getFirst().id()),
-                () -> assertEquals("testUserOne",result.getContent().getFirst().userName()),
-                () -> assertEquals("test2@example.com",result.getContent().get(1).email()),
-                () -> assertEquals("some nice bio for third player",result.getContent().getLast().bio())
+                () -> assertEquals(3, result.getContent().size()),
+                () -> assertEquals(1L, result.getContent().getFirst().id()),
+                () -> assertEquals("testUserOne", result.getContent().getFirst().userName()),
+                () -> assertEquals("test2@example.com", result.getContent().get(1).email()),
+                () -> assertEquals("some nice bio for third player", result.getContent().getLast().bio())
         );
     }
+
     @Test
-    void findAll_WhenPageIsEmpty_ShouldReturnEmptyPage(){
+    void findAll_WhenPageIsEmpty_ShouldReturnEmptyPage() {
         //Given
-        Pageable pageable = PageRequest.of(0,10);
-        Page<Player> page = new PageImpl<>(List.of(),pageable,0);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Player> page = new PageImpl<>(List.of(), pageable, 0);
         doReturn(page).when(repository).findAll(pageable);
         //When
         Page<PlayerDto> result = service.findAll(pageable);
         //Then
         assertAll(
-                () -> assertEquals(0,result.getTotalPages()),
-                () -> assertEquals(0,result.getTotalElements()),
-                () -> assertEquals(10,result.getSize())
+                () -> assertEquals(0, result.getTotalPages()),
+                () -> assertEquals(0, result.getTotalElements()),
+                () -> assertEquals(10, result.getSize())
         );
     }
+
     @Test
-    void findById_WhenPlayerIsPresent_ShouldReturnMatchPlayerDto(){
+    void findById_WhenPlayerIsPresent_ShouldReturnMatchPlayerDto() {
         //Given
         Long id = 1L;
         doReturn(Optional.of(threePlayers.getFirst())).when(repository).findById(id);
@@ -88,119 +91,127 @@ class PlayerServiceTest {
         PlayerDto result = service.findById(id);
         //Then
         assertAll(
-                () -> assertEquals("testUserOne",result.userName()),
-                () -> assertEquals("test1@example.com",result.email()),
-                () -> assertEquals("some nice bio",result.bio())
+                () -> assertEquals("testUserOne", result.userName()),
+                () -> assertEquals("test1@example.com", result.email()),
+                () -> assertEquals("some nice bio", result.bio())
         );
     }
+
     @Test
-    void findById_WhenPlayerDoesNotExists_ShouldThrowPlayerNotFoundException(){
+    void findById_WhenPlayerDoesNotExists_ShouldThrowPlayerNotFoundException() {
         //Given
         Long id = 999L;
         doReturn(Optional.empty()).when(repository).findById(id);
         //When + Then
         PlayerNotFoundException exception = assertThrows(PlayerNotFoundException.class,
                 () -> service.findById(id));
-        assertEquals("Player with "+id+" not found",exception.getMessage());
+        assertEquals("Player with " + id + " not found", exception.getMessage());
     }
+
     @Test
-    void create_WhenValidCommandProvided_ShouldCreateAndReturnMatchingDto(){
+    void create_WhenValidCommandProvided_ShouldCreateAndReturnMatchingDto() {
         //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("userTest","userTest@Example.com","some bio");
-        Player player = new Player(1L,"userTest","userTest@Example.com","some bio",LocalDateTime.now());
+        CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
+        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(player).when(repository).save(any());
         //When
         PlayerDto result = service.create(command);
         //Then
         PlayerDto expected = new PlayerDto(
-                1L,"userTest","userTest@Example.com","some bio"
+                1L, "userTest", "userTest@Example.com", "some bio"
         );
         assertAll(
-                () -> assertEquals(expected.email(),result.email()),
-                () -> assertEquals(expected.bio(),result.bio()),
-                () -> assertEquals(expected.email(),result.email()),
-                () -> assertEquals(expected.id(),result.id())
+                () -> assertEquals(expected.email(), result.email()),
+                () -> assertEquals(expected.bio(), result.bio()),
+                () -> assertEquals(expected.email(), result.email()),
+                () -> assertEquals(expected.id(), result.id())
         );
         verify(repository).save(any(Player.class));
     }
 
     @Test
-    void create_WhenInvalidDetailsProvided_ShouldEmailNotValidException(){
+    void create_WhenInvalidDetailsProvided_ShouldEmailNotValidException() {
         //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("userTest","userTest@@Example.com","some bio");
+        CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@@Example.com", "some bio");
         //When + Then
         EmailNotValidException exception = assertThrows(EmailNotValidException.class,
                 () -> service.create(command));
 
-        assertEquals("userTest@@Example.com Invalid email",exception.getMessage());
+        assertEquals("userTest@@Example.com Invalid email", exception.getMessage());
 
     }
+
     @Test
-    void create_whenPlayerNameTaken_Should_ShouldThrowInvalidUserNameException(){
+    void create_whenPlayerNameTaken_Should_ShouldThrowInvalidUserNameException() {
         //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("userTest","userTest@Example.com","some bio");
+        CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
         doReturn(true).when(repository).existsByUserName(command.userName());
         //When + Then
         InvalidUserNameException exception = assertThrows(InvalidUserNameException.class,
                 () -> service.create(command));
-        assertEquals("Username already taken: " + command.userName(),exception.getMessage());
-        verify(repository,never()).save(any(Player.class));
+        assertEquals("Username already taken: " + command.userName(), exception.getMessage());
+        verify(repository, never()).save(any(Player.class));
     }
+
     @Test
-    void create_whenPlayerNameTooShort_Should_ShouldThrowInvalidUserNameException(){
+    void create_whenPlayerNameTooShort_Should_ShouldThrowInvalidUserNameException() {
         //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("use","userTest@Example.com","some bio");
+        CreatePlayerCommand command = new CreatePlayerCommand("use", "userTest@Example.com", "some bio");
         //When + Then
         InvalidUserNameException exception = assertThrows(InvalidUserNameException.class,
                 () -> service.create(command));
-        assertEquals("Username must bet at least 4 character and maximum 30 characters",exception.getMessage());
-        verify(repository,never()).save(any(Player.class));
+        assertEquals("Username must bet at least 4 character and maximum 30 characters", exception.getMessage());
+        verify(repository, never()).save(any(Player.class));
     }
+
     @Test
-    void delete_WhenPlayerExists_ShouldDeletePlayer(){
+    void delete_WhenPlayerExists_ShouldDeletePlayer() {
         //Given
         Long id = 1L;
-        Player player = new Player(1L,"userTest","userTest@Example.com","some bio",LocalDateTime.now());
+        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(Optional.of(player)).when(repository).findById(id);
         //When
         service.delete(id);
         //Then
         verify(repository).delete(any(Player.class));
     }
+
     @Test
-    void delete_WhenPlayer_ShouldThrowPlayerNotFoundException(){
+    void delete_WhenPlayer_ShouldThrowPlayerNotFoundException() {
         //Given
         Long id = 999L;
         doReturn(Optional.empty()).when(repository).findById(id);
         //When + Then
-         assertThrows(PlayerNotFoundException.class,
+        assertThrows(PlayerNotFoundException.class,
                 () -> service.delete(id));
-        verify(repository,never()).delete(any(Player.class));
+        verify(repository, never()).delete(any(Player.class));
     }
+
     @Test
-    void update_WhenPlayerExists_ShouldUpdateDetailsAndReturnMatchingDto(){
+    void update_WhenPlayerExists_ShouldUpdateDetailsAndReturnMatchingDto() {
         //Given
         Long id = 1L;
-        Player player = new Player(1L,"userTest","userTest@Example.com","some bio",LocalDateTime.now());
+        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(Optional.of(player)).when(repository).findById(id);
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L,"newUsername","newEmail@Example.com","new bio");
-        PlayerDto expected = new PlayerDto(1L,"newUsername","newEmail@Example.com","new bio");
+        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUsername", "newEmail@Example.com", "new bio");
+        PlayerDto expected = new PlayerDto(1L, "newUsername", "newEmail@Example.com", "new bio");
         //When
         PlayerDto result = service.update(command);
         //Then
         assertAll(
-                () -> assertEquals(expected.id(),result.id()),
-                () -> assertEquals(expected.userName(),result.userName()),
-                () -> assertEquals(expected.bio(),result.bio()),
-                () -> assertEquals(expected.email(),result.email())
+                () -> assertEquals(expected.id(), result.id()),
+                () -> assertEquals(expected.userName(), result.userName()),
+                () -> assertEquals(expected.bio(), result.bio()),
+                () -> assertEquals(expected.email(), result.email())
         );
     }
+
     @Test
-    void update_WhenPlayerDoesNotExists_ShouldThrowPlayerNotFoundException(){
+    void update_WhenPlayerDoesNotExists_ShouldThrowPlayerNotFoundException() {
         //Given
         Long id = 1L;
         doReturn(Optional.empty()).when(repository).findById(id);
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L,"newUsername","newEmail@Example.com","new bio");
+        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUsername", "newEmail@Example.com", "new bio");
         //When + then
         assertThrows(PlayerNotFoundException.class,
                 () -> service.update(command));
