@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@ToString
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
