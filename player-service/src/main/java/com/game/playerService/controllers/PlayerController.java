@@ -7,7 +7,6 @@ import com.game.playerService.services.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -34,13 +33,13 @@ public class PlayerController {
 
     @PatchMapping
     @RequestMapping("/update")
-    public PlayerDto update(@RequestBody UpdatePlayerCommand command){
+    public PlayerDto update(@RequestBody UpdatePlayerCommand command) {
         return service.update(command);
     }
 
     @DeleteMapping
     @RequestMapping("/delete/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }
