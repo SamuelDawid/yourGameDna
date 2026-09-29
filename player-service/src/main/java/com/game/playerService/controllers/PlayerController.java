@@ -28,7 +28,6 @@ public class PlayerController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public PlayerDto create(@RequestBody CreatePlayerCommand command) {
         return service.create(command);
     }
