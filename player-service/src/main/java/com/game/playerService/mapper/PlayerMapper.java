@@ -2,6 +2,7 @@ package com.game.playerService.mapper;
 
 import com.game.playerService.dto.CreatePlayerCommand;
 import com.game.playerService.dto.PlayerDto;
+import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.model.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,4 +13,6 @@ public interface PlayerMapper {
 
     @Mapping(target = "id", ignore = true)
     Player toEntity(CreatePlayerCommand command);
+    @Mapping(target = "createdAt",ignore = true)
+    Player update(UpdatePlayerCommand command);
 }

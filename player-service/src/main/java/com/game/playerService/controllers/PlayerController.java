@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -28,18 +29,18 @@ public class PlayerController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PlayerDto create(@Valid @RequestBody CreatePlayerCommand command) {
         return service.create(command);
     }
 
-    @PatchMapping
-    @RequestMapping("/update")
-    public PlayerDto update(@Valid @RequestBody UpdatePlayerCommand command) {
-        return service.update(command);
+    @PatchMapping("/{id}")
+    public PlayerDto update(@PathVariable("id") Long id, @RequestBody UpdatePlayerCommand command) {
+        return service.update(id, command);
     }
 
-    @DeleteMapping
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Valid @PathVariable Long id) {
         service.delete(id);
     }

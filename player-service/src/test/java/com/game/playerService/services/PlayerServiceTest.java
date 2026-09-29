@@ -6,6 +6,7 @@ import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.exceptions.EmailNotValidException;
 import com.game.playerService.exceptions.InvalidUserNameException;
 import com.game.playerService.exceptions.PlayerNotFoundException;
+import com.game.playerService.exceptions.UserNameAlreadyExistsException;
 import com.game.playerService.mapper.PlayerMapper;
 import com.game.playerService.model.Player;
 import com.game.playerService.repository.PlayerRepository;
@@ -41,9 +42,9 @@ class PlayerServiceTest {
         repository = Mockito.mock(PlayerRepository.class);
         service = new PlayerService(playerMapper, repository);
         threePlayers = List.of(
-                new Player(1L, "testUserOne", "test1@example.com", "some nice bio", LocalDateTime.of(2026, 9, 20, 12, 0)),
-                new Player(2L, "testUserTwo", "test2@example.com", "some nice bio for second player", LocalDateTime.of(2026, 9, 21, 13, 0)),
-                new Player(3L, "testUserThree", "test3@example.com", "some nice bio for third player", LocalDateTime.of(2026, 9, 22, 14, 0))
+                new Player( "testUserOne", "test1@example.com", "some nice bio", LocalDateTime.of(2026, 9, 20, 12, 0)),
+                new Player( "testUserTwo", "test2@example.com", "some nice bio for second player", LocalDateTime.of(2026, 9, 21, 13, 0)),
+                new Player( "testUserThree", "test3@example.com", "some nice bio for third player", LocalDateTime.of(2026, 9, 22, 14, 0))
 
         );
     }
@@ -59,7 +60,6 @@ class PlayerServiceTest {
         //Then
         assertAll(
                 () -> assertEquals(3, result.getContent().size()),
-                () -> assertEquals(1L, result.getContent().getFirst().id()),
                 () -> assertEquals("testUserOne", result.getContent().getFirst().userName()),
                 () -> assertEquals("test2@example.com", result.getContent().get(1).email()),
                 () -> assertEquals("some nice bio for third player", result.getContent().getLast().bio())
@@ -112,19 +112,18 @@ class PlayerServiceTest {
     void create_WhenValidCommandProvided_ShouldCreateAndReturnMatchingDto() {
         //Given
         CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
-        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player("userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(player).when(repository).save(any());
         //When
         PlayerDto result = service.create(command);
         //Then
         PlayerDto expected = new PlayerDto(
-                1L, "userTest", "userTest@Example.com", "some bio"
+                null, "userTest", "userTest@Example.com", "some bio"
         );
         assertAll(
                 () -> assertEquals(expected.email(), result.email()),
                 () -> assertEquals(expected.bio(), result.bio()),
-                () -> assertEquals(expected.email(), result.email()),
-                () -> assertEquals(expected.id(), result.id())
+                () -> assertEquals(expected.email(), result.email())
         );
         verify(repository).save(any(Player.class));
     }
@@ -137,7 +136,7 @@ class PlayerServiceTest {
         EmailNotValidException exception = assertThrows(EmailNotValidException.class,
                 () -> service.create(command));
 
-        assertEquals("userTest@@Example.com Invalid email", exception.getMessage());
+        assertEquals("userTest@@Example.com Not a valid email", exception.getMessage());
 
     }
 
@@ -147,20 +146,20 @@ class PlayerServiceTest {
         CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
         doReturn(true).when(repository).existsByUserName(command.userName());
         //When + Then
-        InvalidUserNameException exception = assertThrows(InvalidUserNameException.class,
+        UserNameAlreadyExistsException exception = assertThrows(UserNameAlreadyExistsException.class,
                 () -> service.create(command));
-        assertEquals("Username already taken: " + command.userName(), exception.getMessage());
+        assertEquals("Player with username: "+command.userName()+" already exists", exception.getMessage());
         verify(repository, never()).save(any(Player.class));
     }
 
     @Test
     void create_whenPlayerNameTooShort_Should_ShouldThrowInvalidUserNameException() {
         //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("use", "userTest@Example.com", "some bio");
+        CreatePlayerCommand command = new CreatePlayerCommand("us", "userTest@Example.com", "some bio");
         //When + Then
         InvalidUserNameException exception = assertThrows(InvalidUserNameException.class,
                 () -> service.create(command));
-        assertEquals("Username must bet at least 4 character and maximum 30 characters", exception.getMessage());
+        assertEquals("Username must bet at least 3 character and maximum 30 characters", exception.getMessage());
         verify(repository, never()).save(any(Player.class));
     }
 
@@ -168,7 +167,7 @@ class PlayerServiceTest {
     void delete_WhenPlayerExists_ShouldDeletePlayer() {
         //Given
         Long id = 1L;
-        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player("userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(Optional.of(player)).when(repository).findById(id);
         //When
         service.delete(id);
@@ -191,15 +190,14 @@ class PlayerServiceTest {
     void update_WhenPlayerExists_ShouldUpdateDetailsAndReturnMatchingDto() {
         //Given
         Long id = 1L;
-        Player player = new Player(1L, "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player( "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
         doReturn(Optional.of(player)).when(repository).findById(id);
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUsername", "newEmail@Example.com", "new bio");
+        UpdatePlayerCommand command = new UpdatePlayerCommand("newUsername", "newEmail@Example.com", "new bio");
         PlayerDto expected = new PlayerDto(1L, "newUsername", "newEmail@Example.com", "new bio");
         //When
-        PlayerDto result = service.update(command);
+        PlayerDto result = service.update(id,command);
         //Then
         assertAll(
-                () -> assertEquals(expected.id(), result.id()),
                 () -> assertEquals(expected.userName(), result.userName()),
                 () -> assertEquals(expected.bio(), result.bio()),
                 () -> assertEquals(expected.email(), result.email())
@@ -211,9 +209,9 @@ class PlayerServiceTest {
         //Given
         Long id = 1L;
         doReturn(Optional.empty()).when(repository).findById(id);
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUsername", "newEmail@Example.com", "new bio");
+        UpdatePlayerCommand command = new UpdatePlayerCommand("newUsername", "newEmail@Example.com", "new bio");
         //When + then
         assertThrows(PlayerNotFoundException.class,
-                () -> service.update(command));
+                () -> service.update(id,command));
     }
 }

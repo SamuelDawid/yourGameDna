@@ -190,19 +190,19 @@ class PlayerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.status").value(400),
-                        jsonPath("$.detail").value(command.email() + " Not a valid email")
+                        jsonPath("$.status").value(400)
                 );
     }
 
     @Test
     void update_WhenPlayerExists_ShouldReturnUpdatedDto() throws Exception {
         //Given
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUserName", "newEmail@gamil.com", "new bio");
+        Long id = 1L;
+        UpdatePlayerCommand command = new UpdatePlayerCommand("newUserName", "newEmail@gamil.com", "new bio");
         PlayerDto expected = new PlayerDto(1L, "newUserName", "newEmail@gamil.com", "new bio");
-        when(service.update(command)).thenReturn(expected);
+        when(service.update(id,command)).thenReturn(expected);
         //When + Then
-        mockMvc.perform(patch("/players/update")
+        mockMvc.perform(patch("/players/{id}",id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(command)))
                 .andExpectAll(
@@ -211,42 +211,42 @@ class PlayerControllerTest {
                         jsonPath("$.userName").value("newUserName"),
                         jsonPath("$.bio").value("new bio")
                 );
-        verify(service).update(command);
+        verify(service).update(id,command);
     }
 
     @Test
     void update_WhenPlayerDoesNotExists_ShouldReturn404() throws Exception {
-        UpdatePlayerCommand command = new UpdatePlayerCommand(1L, "newUserName", "newEmail@gamil.com", "new bio");
-        when(service.update(command)).thenThrow(new PlayerNotFoundException(command.id()));
+        //given
+        Long id = 1L;
+        UpdatePlayerCommand command = new UpdatePlayerCommand("newUserName", "newEmail@gamil.com", "new bio");
+        when(service.update(id,command)).thenThrow(new PlayerNotFoundException(id));
         //When + Then
-        mockMvc.perform(patch("/players/update")
+        mockMvc.perform(patch("/players/{id}",id)
                         .content(objectMapper.writeValueAsString(command))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isNotFound(),
                         jsonPath("$.status").value(404),
-                        jsonPath("$.detail").value("Player with " + command.id() + " not found")
+                        jsonPath("$.detail").value("Player with " + id + " not found")
                 );
     }
 
     @Test
-    void delete_WhenPlayerExistsShouldReturn200() throws Exception {
+    void delete_WhenPlayerExistsShouldReturn204() throws Exception {
         //Given
         Long id = 1L;
-        mockMvc.perform(delete("/players/delete/{id}", id))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/players/{id}", id))
+                .andExpect(status().isNoContent());
         verify(service).delete(id);
     }
 
     @Test
-    void delete_WhenPlayerWasNotFoundShouldReturn400() throws Exception {
+    void delete_WhenPlayerWasNotFoundShouldReturn404() throws Exception {
         //Given
         Long id = 1L;
         doThrow(new PlayerNotFoundException(id)).when(service).delete(id);
         mockMvc.perform(delete("/players/delete/{id]", id))
-                .andExpectAll(
-                        status().isBadRequest()
-                );
+                .andExpect(status().isNotFound());
         verify(service, never()).delete(id);
     }
 

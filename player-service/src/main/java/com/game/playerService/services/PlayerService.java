@@ -51,12 +51,20 @@ public class PlayerService {
     }
 
     @Transactional
-    public PlayerDto update(@NonNull UpdatePlayerCommand command) {
-        Player player = findByIdOrThrow(command.id());
-        validateUsername(command.userName());
-        validateEmail(command.email());
-        Player updated = player.update(command);
-        log.info("Updated player with id {} -> {}", command.id(), updated);
+    public PlayerDto update(@NonNull Long id, @NonNull UpdatePlayerCommand command) {
+        Player player = findByIdOrThrow(id);
+
+        if (command.userName() != null) {
+            if (!command.userName().equals(player.getUserName())) {
+                validateUsername(command.userName());
+            }
+        }
+        if (command.email() != null) {
+            validateEmail(command.email());
+        }
+
+        Player updated = mapper.update(command);
+        log.info("Updated player with id {} -> {}", id, updated);
         return mapper.toDto(updated);
     }
 
@@ -72,9 +80,9 @@ public class PlayerService {
             log.error("Invalid username: {}", userName);
             throw new InvalidUserNameException("Username can't be blank");
         }
-        if (userName.length() < 4 || userName.length() > 30) {
-            log.error("Invalid username, must bet at least 4 character and maximum 30 characters -> {}", userName);
-            throw new InvalidUserNameException("Username must bet at least 4 character and maximum 30 characters");
+        if (userName.length() < 3 || userName.length() > 30) {
+            log.error("Invalid username, must bet at least 3 character and maximum 30 characters -> {}", userName);
+            throw new InvalidUserNameException("Username must bet at least 3 character and maximum 30 characters");
         }
         if (repository.existsByUserName(userName)) {
             log.error("username already taken -> {}", userName);
