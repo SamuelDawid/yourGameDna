@@ -3,9 +3,7 @@ package com.game.playerService.services;
 import com.game.playerService.dto.CreatePlayerCommand;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
-import com.game.playerService.exceptions.EmailNotValidException;
-import com.game.playerService.exceptions.InvalidUserNameException;
-import com.game.playerService.exceptions.PlayerNotFoundException;
+import com.game.playerService.exceptions.*;
 import com.game.playerService.mapper.PlayerMapper;
 import com.game.playerService.model.Player;
 import com.game.playerService.repository.PlayerRepository;
@@ -80,18 +78,18 @@ public class PlayerService {
         }
         if (repository.existsByUserName(userName)) {
             log.error("username already taken -> {}", userName);
-            throw new InvalidUserNameException("Username already taken: " + userName);
+            throw new UserNameAlreadyExistsException(userName);
         }
     }
 
     private void validateEmail(String email) {
         if (!EmailValidator.getInstance().isValid(email)) {
             log.error("Invalid email {} ", email);
-            throw new EmailNotValidException(email, "Invalid email");
+            throw new EmailNotValidException(email);
         }
         if (repository.existsByEmail(email)) {
             log.error("Email already exists: {}", email);
-            throw new EmailNotValidException(email, "email already exists");
+            throw new EmailAlreadyTakenException(email);
         }
     }
 }
