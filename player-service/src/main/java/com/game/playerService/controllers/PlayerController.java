@@ -4,6 +4,7 @@ import com.game.playerService.dto.CreatePlayerCommand;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.services.PlayerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,24 +23,24 @@ public class PlayerController {
 
     @GetMapping
     @RequestMapping("/{id}")
-    public PlayerDto findById(@PathVariable("id") Long id) {
+    public PlayerDto findById(@Valid @PathVariable("id") Long id) {
         return service.findById(id);
     }
 
     @PostMapping
-    public PlayerDto create(@RequestBody CreatePlayerCommand command) {
+    public PlayerDto create(@Valid @RequestBody CreatePlayerCommand command) {
         return service.create(command);
     }
 
     @PatchMapping
     @RequestMapping("/update")
-    public PlayerDto update(@RequestBody UpdatePlayerCommand command) {
+    public PlayerDto update(@Valid @RequestBody UpdatePlayerCommand command) {
         return service.update(command);
     }
 
     @DeleteMapping
     @RequestMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@Valid @PathVariable Long id) {
         service.delete(id);
     }
 }
