@@ -22,9 +22,8 @@ public class PlayerController {
         return service.findAll(pageable);
     }
 
-    @GetMapping
-    @RequestMapping("/{id}")
-    public PlayerDto findById(@Valid @PathVariable("id") Long id) {
+    @GetMapping("/{id}")
+    public PlayerDto findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
 
@@ -35,13 +34,13 @@ public class PlayerController {
     }
 
     @PatchMapping("/{id}")
-    public PlayerDto update(@PathVariable("id") Long id, @RequestBody UpdatePlayerCommand command) {
+    public PlayerDto update(@Valid @PathVariable("id") Long id,@Valid @RequestBody UpdatePlayerCommand command) {
         return service.update(id, command);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@Valid @PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }
