@@ -180,6 +180,24 @@ class PlayerServiceTest {
     }
 
     @Test
+    void update_WhenPlayerExistsButNotAllFieldAreProvided_ShouldReturnUpdatedDto() {
+        //Given
+        Long id = 1L;
+        Player player = new Player("userTest", "userTest@Example.com", "some bio");
+        UpdatePlayerCommand command = new UpdatePlayerCommand(null, null, "new bio");
+        PlayerDto expected = new PlayerDto(1L, "userTest", "userTest@Example.com", "new bio");
+        doReturn(Optional.of(player)).when(repository).findById(id);
+        //When
+        PlayerDto result = service.update(id, command);
+        // Then
+        assertAll(
+                () -> assertEquals(expected.userName(), result.userName()),
+                () -> assertEquals(expected.bio(), result.bio()),
+                () -> assertEquals(expected.email(), result.email())
+        );
+    }
+
+    @Test
     void update_WhenPlayerDoesNotExists_ShouldThrowPlayerNotFoundException() {
         //Given
         Long id = 1L;

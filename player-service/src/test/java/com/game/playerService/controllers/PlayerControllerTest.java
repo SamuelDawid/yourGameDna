@@ -229,26 +229,6 @@ class PlayerControllerTest {
     }
 
     @Test
-    void update_WhenPlayerExistsButNotAllFieldAreProvided_ShouldReturnUpdatedDto() throws Exception {
-        //Given
-        Long id = 1L;
-        UpdatePlayerCommand command = new UpdatePlayerCommand(null, null, null);
-        PlayerDto expected = new PlayerDto(1L, "newUserName", "newEmail@gamil.com", "new bio");
-        when(service.update(id, command)).thenReturn(expected);
-        //When + Then
-        mockMvc.perform(patch("/players/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command)))
-                .andExpectAll(
-                        status().isOk(),
-                        jsonPath("$.email").value("newEmail@gamil.com"),
-                        jsonPath("$.userName").value("newUserName"),
-                        jsonPath("$.bio").value("new bio")
-                );
-        verify(service).update(id, command);
-    }
-
-    @Test
     void update_WhenPlayerDoesNotExists_ShouldReturn404() throws Exception {
         //given
         Long id = 1L;
