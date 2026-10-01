@@ -245,7 +245,7 @@ class PlayerControllerTest {
         //Given
         Long id = 1L;
         doThrow(new PlayerNotFoundException(id)).when(service).delete(id);
-        mockMvc.perform(delete("/players/delete/{id]", id))
+        mockMvc.perform(delete("/players/delete/{id}", id))
                 .andExpect(status().isNotFound());
         verify(service, never()).delete(id);
     }

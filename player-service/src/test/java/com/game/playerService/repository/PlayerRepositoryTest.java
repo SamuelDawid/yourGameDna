@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,7 +17,7 @@ class PlayerRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        player = new Player("testUser", "testemail@example.com", "some bio", LocalDateTime.of(2026, 5, 2, 11, 0));
+        player = new Player("testUser", "testemail@example.com", "some bio");
         repository.save(player);
     }
 

@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,9 +41,9 @@ class PlayerServiceTest {
         repository = Mockito.mock(PlayerRepository.class);
         service = new PlayerService(playerMapper, repository);
         threePlayers = List.of(
-                new Player( "testUserOne", "test1@example.com", "some nice bio", LocalDateTime.of(2026, 9, 20, 12, 0)),
-                new Player( "testUserTwo", "test2@example.com", "some nice bio for second player", LocalDateTime.of(2026, 9, 21, 13, 0)),
-                new Player( "testUserThree", "test3@example.com", "some nice bio for third player", LocalDateTime.of(2026, 9, 22, 14, 0))
+                new Player("testUserOne", "test1@example.com", "some nice bio"),
+                new Player("testUserTwo", "test2@example.com", "some nice bio for second player"),
+                new Player("testUserThree", "test3@example.com", "some nice bio for third player")
 
         );
     }
@@ -112,7 +111,7 @@ class PlayerServiceTest {
     void create_WhenValidCommandProvided_ShouldCreateAndReturnMatchingDto() {
         //Given
         CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
-        Player player = new Player("userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player("userTest", "userTest@Example.com", "some bio");
         doReturn(player).when(repository).save(any());
         //When
         PlayerDto result = service.create(command);
@@ -148,7 +147,7 @@ class PlayerServiceTest {
         //When + Then
         UserNameAlreadyExistsException exception = assertThrows(UserNameAlreadyExistsException.class,
                 () -> service.create(command));
-        assertEquals("Player with username: "+command.userName()+" already exists", exception.getMessage());
+        assertEquals("Player with username: " + command.userName() + " already exists", exception.getMessage());
         verify(repository, never()).save(any(Player.class));
     }
 
@@ -167,7 +166,7 @@ class PlayerServiceTest {
     void delete_WhenPlayerExists_ShouldDeletePlayer() {
         //Given
         Long id = 1L;
-        Player player = new Player("userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player("userTest", "userTest@Example.com", "some bio");
         doReturn(Optional.of(player)).when(repository).findById(id);
         //When
         service.delete(id);
@@ -190,12 +189,12 @@ class PlayerServiceTest {
     void update_WhenPlayerExists_ShouldUpdateDetailsAndReturnMatchingDto() {
         //Given
         Long id = 1L;
-        Player player = new Player( "userTest", "userTest@Example.com", "some bio", LocalDateTime.now());
+        Player player = new Player("userTest", "userTest@Example.com", "some bio");
         doReturn(Optional.of(player)).when(repository).findById(id);
         UpdatePlayerCommand command = new UpdatePlayerCommand("newUsername", "newEmail@Example.com", "new bio");
         PlayerDto expected = new PlayerDto(1L, "newUsername", "newEmail@Example.com", "new bio");
         //When
-        PlayerDto result = service.update(id,command);
+        PlayerDto result = service.update(id, command);
         //Then
         assertAll(
                 () -> assertEquals(expected.userName(), result.userName()),
@@ -212,6 +211,6 @@ class PlayerServiceTest {
         UpdatePlayerCommand command = new UpdatePlayerCommand("newUsername", "newEmail@Example.com", "new bio");
         //When + then
         assertThrows(PlayerNotFoundException.class,
-                () -> service.update(id,command));
+                () -> service.update(id, command));
     }
 }
