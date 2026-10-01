@@ -3,14 +3,15 @@ package com.game.playerService.services;
 import com.game.playerService.dto.CreatePlayerCommand;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
-import com.game.playerService.exceptions.*;
+import com.game.playerService.exceptions.EmailAlreadyTakenException;
+import com.game.playerService.exceptions.PlayerNotFoundException;
+import com.game.playerService.exceptions.UserNameAlreadyExistsException;
 import com.game.playerService.mapper.PlayerMapper;
 import com.game.playerService.model.Player;
 import com.game.playerService.repository.PlayerRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,13 +60,17 @@ public class PlayerService {
                 validateUsername(command.userName());
             }
         }
+
         if (command.email() != null) {
-            validateEmail(command.email());
+            if(!command.email().equals(player.getEmail())){
+                validateEmail(command.email());
+            }
         }
 
-        Player updated = mapper.update(command);
-        log.info("Updated player with id {} -> {}", id, updated);
-        return mapper.toDto(updated);
+        mapper.update(player,command);
+
+        log.info("Updated player with id {} -> {}", id, player);
+        return mapper.toDto(player);
     }
 
     private Player findByIdOrThrow(Long id) {
@@ -76,14 +81,6 @@ public class PlayerService {
     }
 
     private void validateUsername(String userName) {
-        if (userName.isBlank()) {
-            log.error("Invalid username: {}", userName);
-            throw new InvalidUserNameException("Username can't be blank");
-        }
-        if (userName.length() < 3 || userName.length() > 30) {
-            log.error("Invalid username, must bet at least 3 character and maximum 30 characters -> {}", userName);
-            throw new InvalidUserNameException("Username must bet at least 3 character and maximum 30 characters");
-        }
         if (repository.existsByUserName(userName)) {
             log.error("username already taken -> {}", userName);
             throw new UserNameAlreadyExistsException(userName);
@@ -91,10 +88,6 @@ public class PlayerService {
     }
 
     private void validateEmail(String email) {
-        if (!EmailValidator.getInstance().isValid(email)) {
-            log.error("Invalid email {} ", email);
-            throw new EmailNotValidException(email);
-        }
         if (repository.existsByEmail(email)) {
             log.error("Email already exists: {}", email);
             throw new EmailAlreadyTakenException(email);
