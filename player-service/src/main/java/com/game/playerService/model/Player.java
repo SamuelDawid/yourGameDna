@@ -35,11 +35,10 @@ public class Player {
         return id != null && id.equals(other.getId());
     }
 
-    public Player(String userName, String email, String bio, LocalDateTime createdAt) {
+    public Player(String userName, String email, String bio) {
         this.userName = userName;
         this.email = email;
         this.bio = bio;
-        this.createdAt = createdAt;
     }
 
     @Override
