@@ -9,6 +9,7 @@ public record CreatePlayerCommand(
         @Size(min = 3,max = 30)
         String userName,
         @Email
+        @NotBlank
         String email,
         @Size(max = 2000)
         String bio
