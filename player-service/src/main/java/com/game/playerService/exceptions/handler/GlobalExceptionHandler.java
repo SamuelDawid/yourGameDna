@@ -1,13 +1,18 @@
 package com.game.playerService.exceptions.handler;
 
 import com.game.playerService.exceptions.PlayerServiceException;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,14 +21,16 @@ public class GlobalExceptionHandler {
         log.error("Rejected -> ", exception);
         return ProblemDetail.forStatusAndDetail(exception.getStatus(), exception.getMessage());
     }
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ProblemDetail handleConstraintViolation(ConstraintViolationException exception){
-        log.error("Constraint validation -> {}",exception.getConstraintViolations());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,exception.getMessage());
-    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleMethodArgumentNotValid(MethodArgumentNotValidException exception){
-        log.error("Constraint validation -> ",exception);
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,exception.getBindingResult().getFieldError().toString());
+    public ProblemDetail handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
+        log.error("Constraint validation -> {}", exception.getFieldErrors());
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        Map<String, TreeSet<String>> properties = new HashMap<>();
+        for (FieldError error : exception.getBindingResult().getFieldErrors()) {
+            properties.computeIfAbsent(error.getField(), key -> new TreeSet<>()).add(error.getDefaultMessage());
+        }
+        problemDetail.setProperty("errors", properties);
+        return problemDetail;
     }
 }
