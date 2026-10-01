@@ -6,6 +6,7 @@ import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.model.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface PlayerMapper {
@@ -14,5 +15,5 @@ public interface PlayerMapper {
     @Mapping(target = "id", ignore = true)
     Player toEntity(CreatePlayerCommand command);
     @Mapping(target = "createdAt",ignore = true)
-    Player update(UpdatePlayerCommand command);
+    void update(@MappingTarget Player player, UpdatePlayerCommand command);
 }
