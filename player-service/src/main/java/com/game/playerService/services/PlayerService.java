@@ -1,6 +1,7 @@
 package com.game.playerService.services;
 
 import com.game.playerService.dto.CreatePlayerCommand;
+import com.game.playerService.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.exceptions.EmailAlreadyTakenException;
@@ -12,7 +13,6 @@ import com.game.playerService.repository.PlayerRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +25,8 @@ public class PlayerService {
     private final PlayerRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<PlayerDto> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDto);
+    public PageDto<PlayerDto> findAll(Pageable pageable) {
+        return PageDto.from(repository.findAll(pageable).map(mapper::toDto));
     }
 
     @Transactional(readOnly = true)
@@ -62,12 +62,12 @@ public class PlayerService {
         }
 
         if (command.email() != null) {
-            if(!command.email().equals(player.getEmail())){
+            if (!command.email().equals(player.getEmail())) {
                 validateEmail(command.email());
             }
         }
 
-        mapper.update(player,command);
+        mapper.update(player, command);
 
         log.info("Updated player with id {} -> {}", id, player);
         return mapper.toDto(player);

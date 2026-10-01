@@ -1,6 +1,7 @@
 package com.game.playerService.controllers;
 
 import com.game.playerService.dto.CreatePlayerCommand;
+import com.game.playerService.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.services.PlayerService;
@@ -18,7 +19,7 @@ public class PlayerController {
     private final PlayerService service;
 
     @GetMapping
-    public Page<PlayerDto> findAll(Pageable pageable) {
+    public PageDto<PlayerDto> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }
 
@@ -34,7 +35,7 @@ public class PlayerController {
     }
 
     @PatchMapping("/{id}")
-    public PlayerDto update(@Valid @PathVariable("id") Long id,@Valid @RequestBody UpdatePlayerCommand command) {
+    public PlayerDto update(@PathVariable("id") Long id,@Valid @RequestBody UpdatePlayerCommand command) {
         return service.update(id, command);
     }
 
