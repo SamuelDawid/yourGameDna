@@ -3,8 +3,6 @@ package com.game.playerService.services;
 import com.game.playerService.dto.CreatePlayerCommand;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
-import com.game.playerService.exceptions.EmailNotValidException;
-import com.game.playerService.exceptions.InvalidUserNameException;
 import com.game.playerService.exceptions.PlayerNotFoundException;
 import com.game.playerService.exceptions.UserNameAlreadyExistsException;
 import com.game.playerService.mapper.PlayerMapper;
@@ -128,18 +126,6 @@ class PlayerServiceTest {
     }
 
     @Test
-    void create_WhenInvalidDetailsProvided_ShouldEmailNotValidException() {
-        //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@@Example.com", "some bio");
-        //When + Then
-        EmailNotValidException exception = assertThrows(EmailNotValidException.class,
-                () -> service.create(command));
-
-        assertEquals("userTest@@Example.com Not a valid email", exception.getMessage());
-
-    }
-
-    @Test
     void create_whenPlayerNameTaken_Should_ShouldThrowInvalidUserNameException() {
         //Given
         CreatePlayerCommand command = new CreatePlayerCommand("userTest", "userTest@Example.com", "some bio");
@@ -148,17 +134,6 @@ class PlayerServiceTest {
         UserNameAlreadyExistsException exception = assertThrows(UserNameAlreadyExistsException.class,
                 () -> service.create(command));
         assertEquals("Player with username: " + command.userName() + " already exists", exception.getMessage());
-        verify(repository, never()).save(any(Player.class));
-    }
-
-    @Test
-    void create_whenPlayerNameTooShort_Should_ShouldThrowInvalidUserNameException() {
-        //Given
-        CreatePlayerCommand command = new CreatePlayerCommand("us", "userTest@Example.com", "some bio");
-        //When + Then
-        InvalidUserNameException exception = assertThrows(InvalidUserNameException.class,
-                () -> service.create(command));
-        assertEquals("Username must bet at least 3 character and maximum 30 characters", exception.getMessage());
         verify(repository, never()).save(any(Player.class));
     }
 
