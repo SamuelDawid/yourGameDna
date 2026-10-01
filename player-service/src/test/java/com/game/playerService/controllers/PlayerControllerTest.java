@@ -1,6 +1,7 @@
 package com.game.playerService.controllers;
 
 import com.game.playerService.dto.CreatePlayerCommand;
+import com.game.playerService.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.exceptions.*;
@@ -9,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -20,6 +19,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -50,18 +50,19 @@ class PlayerControllerTest {
     void findAll_WhenThreePlayersGiven_ShouldReturnPageWithThreePlayerDto() throws Exception {
         //Given
         Pageable pageable = PageRequest.of(0, 10);
-        Page<PlayerDto> page = new PageImpl<>(playerList, pageable, 3);
+        PageDto<PlayerDto> page = new PageDto<>(playerList, pageable.getPageNumber(), pageable.getPageSize(), 3, 1);
         when(service.findAll(pageable)).thenReturn(page);
         //When + Then
         mockMvc.perform(get("/players").param("page", "0").param("size", "10"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
+                        jsonPath("$.content").value(hasSize(3)),
+                        jsonPath("$.pageNumber").value(0),
+                        jsonPath("$.pageSize").value(10),
                         jsonPath("$.totalElements").value(3),
-                        jsonPath("$.number").value(0),
-                        jsonPath("$.size").value(10),
-                        jsonPath("$.numberOfElements").value(3),
-                        jsonPath("$.totalPages").value(1)
+                        jsonPath("$.totalPages").value(1),
+                        jsonPath("$.content[0].id").value(1)
                 );
         verify(service).findAll(pageable);
     }
@@ -69,17 +70,16 @@ class PlayerControllerTest {
     @Test
     void findAll_WhenNoPlayersExists_ShouldReturnEmptyPage() throws Exception {
         Pageable pageable = PageRequest.of(0, 20);
-        Page<PlayerDto> page = new PageImpl<>(List.of(), pageable, 0);
+        PageDto<PlayerDto> page = new PageDto<>(List.of(), pageable.getPageNumber(), pageable.getPageSize(), 0, 1);
         when(service.findAll(pageable)).thenReturn(page);
         //When + Then
         mockMvc.perform(get("/players").param("page", "0").param("size", "20"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.totalElements").value(0),
-                        jsonPath("$.number").value(0),
-                        jsonPath("$.size").value(20),
-                        jsonPath("$.numberOfElements").value(0),
-                        jsonPath("$.totalPages").value(0)
+                        jsonPath("$.pageNumber").value(0),
+                        jsonPath("$.pageSize").value(20),
+                        jsonPath("$.totalPages").value(1)
                 );
     }
 
@@ -195,14 +195,28 @@ class PlayerControllerTest {
     }
 
     @Test
+    void create_WhenNickIsEmptyAndEmailIsNotValid_ShouldThrowMethodArgumentNotValidException() throws Exception {
+        //Given
+        CreatePlayerCommand command = new CreatePlayerCommand("", "testPlayerOne@@Email.com", "bio for test player one");
+        //When + Then
+        mockMvc.perform(post("/players")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.errors.userName", hasSize(2)),
+                        jsonPath("$.errors.email", hasSize(1)));
+    }
+
+    @Test
     void update_WhenPlayerExists_ShouldReturnUpdatedDto() throws Exception {
         //Given
         Long id = 1L;
         UpdatePlayerCommand command = new UpdatePlayerCommand("newUserName", "newEmail@gamil.com", "new bio");
         PlayerDto expected = new PlayerDto(1L, "newUserName", "newEmail@gamil.com", "new bio");
-        when(service.update(id,command)).thenReturn(expected);
+        when(service.update(id, command)).thenReturn(expected);
         //When + Then
-        mockMvc.perform(patch("/players/{id}",id)
+        mockMvc.perform(patch("/players/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(command)))
                 .andExpectAll(
@@ -211,7 +225,27 @@ class PlayerControllerTest {
                         jsonPath("$.userName").value("newUserName"),
                         jsonPath("$.bio").value("new bio")
                 );
-        verify(service).update(id,command);
+        verify(service).update(id, command);
+    }
+
+    @Test
+    void update_WhenPlayerExistsButNotAllFieldAreProvided_ShouldReturnUpdatedDto() throws Exception {
+        //Given
+        Long id = 1L;
+        UpdatePlayerCommand command = new UpdatePlayerCommand(null, null, null);
+        PlayerDto expected = new PlayerDto(1L, "newUserName", "newEmail@gamil.com", "new bio");
+        when(service.update(id, command)).thenReturn(expected);
+        //When + Then
+        mockMvc.perform(patch("/players/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.email").value("newEmail@gamil.com"),
+                        jsonPath("$.userName").value("newUserName"),
+                        jsonPath("$.bio").value("new bio")
+                );
+        verify(service).update(id, command);
     }
 
     @Test
@@ -219,9 +253,9 @@ class PlayerControllerTest {
         //given
         Long id = 1L;
         UpdatePlayerCommand command = new UpdatePlayerCommand("newUserName", "newEmail@gamil.com", "new bio");
-        when(service.update(id,command)).thenThrow(new PlayerNotFoundException(id));
+        when(service.update(id, command)).thenThrow(new PlayerNotFoundException(id));
         //When + Then
-        mockMvc.perform(patch("/players/{id}",id)
+        mockMvc.perform(patch("/players/{id}", id)
                         .content(objectMapper.writeValueAsString(command))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
@@ -245,9 +279,8 @@ class PlayerControllerTest {
         //Given
         Long id = 1L;
         doThrow(new PlayerNotFoundException(id)).when(service).delete(id);
-        mockMvc.perform(delete("/players/delete/{id}", id))
+        mockMvc.perform(delete("/players/{id}", id))
                 .andExpect(status().isNotFound());
-        verify(service, never()).delete(id);
     }
 
 }

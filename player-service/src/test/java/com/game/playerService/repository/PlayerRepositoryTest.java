@@ -45,7 +45,7 @@ class PlayerRepositoryTest {
         //When + Then
         assertTrue(repository.existsByEmail(email));
     }
-
+    
     @Test
     void existsByEmail_WhenPlayerDoesNotExists_ShouldReturnFalse() {
         //Given

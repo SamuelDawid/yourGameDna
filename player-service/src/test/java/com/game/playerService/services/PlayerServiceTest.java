@@ -1,6 +1,7 @@
 package com.game.playerService.services;
 
 import com.game.playerService.dto.CreatePlayerCommand;
+import com.game.playerService.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.exceptions.PlayerNotFoundException;
@@ -53,13 +54,13 @@ class PlayerServiceTest {
         Page<Player> page = new PageImpl<>(threePlayers, pageable, 3);
         doReturn(page).when(repository).findAll(pageable);
         //When
-        Page<PlayerDto> result = service.findAll(pageable);
+        PageDto<PlayerDto> result = service.findAll(pageable);
         //Then
         assertAll(
-                () -> assertEquals(3, result.getContent().size()),
-                () -> assertEquals("testUserOne", result.getContent().getFirst().userName()),
-                () -> assertEquals("test2@example.com", result.getContent().get(1).email()),
-                () -> assertEquals("some nice bio for third player", result.getContent().getLast().bio())
+                () -> assertEquals(3, result.content().size()),
+                () -> assertEquals("testUserOne", result.content().getFirst().userName()),
+                () -> assertEquals("test2@example.com", result.content().get(1).email()),
+                () -> assertEquals("some nice bio for third player", result.content().getLast().bio())
         );
     }
 
@@ -70,12 +71,12 @@ class PlayerServiceTest {
         Page<Player> page = new PageImpl<>(List.of(), pageable, 0);
         doReturn(page).when(repository).findAll(pageable);
         //When
-        Page<PlayerDto> result = service.findAll(pageable);
+        PageDto<PlayerDto> result = service.findAll(pageable);
         //Then
         assertAll(
-                () -> assertEquals(0, result.getTotalPages()),
-                () -> assertEquals(0, result.getTotalElements()),
-                () -> assertEquals(10, result.getSize())
+                () -> assertEquals(0, result.totalPages()),
+                () -> assertEquals(0, result.totalElements()),
+                () -> assertEquals(10, result.pageSize())
         );
     }
 
