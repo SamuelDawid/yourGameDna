@@ -17,6 +17,7 @@
 
     <modules>
         <module>player-service</module>
+        <module>catalog-service</module>
     </modules>
 
     <properties>
