@@ -1,4 +1,4 @@
-package dto;
+package com.catalogservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
