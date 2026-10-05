@@ -1,6 +1,6 @@
-package rawgClientConfiguration;
+package com.catalogservice.rawgClientConfiguration;
 
-import customRawgErrorDecoder.RawgErrorDecoder;
+import com.catalogservice.customRawgErrorDecoder.RawgErrorDecoder;
 import feign.RequestInterceptor;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
@@ -12,8 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RawgClientConfiguration {
     @Bean
-    public ErrorDecoder rawgErrorDecoder(){return new RawgErrorDecoder();
-    }
+    public ErrorDecoder rawgErrorDecoder(){return new RawgErrorDecoder();}
     @Bean
     public Retryer retryer(){
         return new Retryer.Default(100L, TimeUnit.SECONDS.toMillis(2L),3);
