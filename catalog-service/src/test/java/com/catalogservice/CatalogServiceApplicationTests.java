@@ -1,4 +1,4 @@
-package catalogservice.catalogservice;
+package com.catalogservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

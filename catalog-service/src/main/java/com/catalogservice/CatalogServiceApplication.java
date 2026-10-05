@@ -1,4 +1,4 @@
-package catalogservice.catalogservice;
+package com.catalogservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
