@@ -1,6 +1,7 @@
 package com.catalogservice.rawgClientConfiguration;
 
 import com.catalogservice.customRawgErrorDecoder.RawgErrorDecoder;
+import feign.Logger;
 import feign.RequestInterceptor;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
@@ -20,5 +21,9 @@ public class RawgClientConfiguration {
     @Bean
     public RequestInterceptor requestInterceptor(@Value("${rawg.api-key}") String key){
         return requestTemplate -> requestTemplate.query("key",key);
+    }
+    @Bean
+    Logger.Level feignLoggerLevel(){
+        return Logger.Level.NONE;
     }
 }

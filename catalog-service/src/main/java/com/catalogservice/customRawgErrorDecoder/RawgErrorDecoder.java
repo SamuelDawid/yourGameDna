@@ -33,7 +33,12 @@ public class RawgErrorDecoder implements ErrorDecoder {
             }
             case SERVICE_UNAVAILABLE -> {
                 log.error("Service unavailable ");
-                return new RetryableException(response.status(), feignException.getMessage(), response.request().httpMethod(), (Long) null, response.request());
+                return new RetryableException(
+                        response.status(),
+                        "RAWG Unavailable",
+                        response.request().httpMethod(),
+                        (Long) null,
+                        response.request());
             }
             default -> {
                 if (status.is5xxServerError()) {
