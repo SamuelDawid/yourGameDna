@@ -1,5 +1,6 @@
 package com.catalogservice.controller;
 
+import com.catalogservice.dto.GameDetailsDto;
 import com.catalogservice.dto.GameDto;
 import com.catalogservice.dto.GamePageResponse;
 import com.catalogservice.service.CatalogService;
@@ -22,7 +23,7 @@ public class CatalogController {
     }
 
     @GetMapping("/games/{id}")
-    GameDto getGameById(@PathVariable Long id){
+    GameDetailsDto getGameById(@PathVariable Long id){
         return service.findGameById(id);
     }
 }

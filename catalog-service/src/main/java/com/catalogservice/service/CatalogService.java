@@ -1,6 +1,6 @@
 package com.catalogservice.service;
 
-import com.catalogservice.dto.GameDto;
+import com.catalogservice.dto.GameDetailsDto;
 import com.catalogservice.dto.GamePageResponse;
 import com.catalogservice.mappers.RawgMapper;
 import com.catalogservice.rawgClient.RawgClient;
@@ -18,7 +18,7 @@ public class CatalogService {
     public GamePageResponse findGameByName(String name, Integer pageSize) {
         return mapper.toGamePage(client.getGames(name, pageSize));
     }
-    public GameDto findGameById(@NonNull Long id ){
-        return mapper.toGameDto(client.getGameById(id));
+    public GameDetailsDto findGameById(@NonNull Long id ){
+        return mapper.toGameDetailsDto(client.getGameById(id));
     }
 }
