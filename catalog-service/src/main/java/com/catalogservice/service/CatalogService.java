@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 public class CatalogService {
     private final RawgClient client;
     private final RawgMapper mapper;
+
     public GamePageResponse findGameByName(String name, Integer pageSize) {
         return mapper.toGamePage(client.getGames(name, pageSize));
     }
-    public GameDetailsDto findGameById(@NonNull Long id ){
+
+    public GameDetailsDto findGameById(@NonNull Long id) {
         return mapper.toGameDetailsDto(client.getGameById(id));
     }
 }
