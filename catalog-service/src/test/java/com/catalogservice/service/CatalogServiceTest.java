@@ -83,7 +83,7 @@ class CatalogServiceTest {
                 () -> assertEquals(expected.id(),result.rawgId()),
                 () -> assertEquals(expected.name(),result.name()),
                 () -> assertEquals(LocalDate.of(2020,10,10),result.released()),
-                () -> assertEquals(expected.background_image(),result.imageUrl()),
+                () -> assertEquals(expected.imageUrl(),result.imageUrl()),
                 () -> assertEquals(expected.rating(),result.rating()),
                 () -> assertEquals(expected.description(),result.description()),
                 () -> assertEquals(expected.genres(),result.genres()),
