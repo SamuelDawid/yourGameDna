@@ -22,8 +22,8 @@ public class CatalogService {
 
     public PageDto<GameDto> findGameByName(String name, Pageable pageable) {
         int pageSize = pageable.getPageSize();
-        RawgPageResponse<RawgGameDto> response = client.getGames(name,pageable.getPageNumber() +1,pageSize);
-        return mapper.toGamePage(response,pageable);
+        RawgPageResponse<RawgGameDto> response = client.getGames(name, pageable.getPageNumber() + 1, pageSize);
+        return mapper.toGamePage(response, pageable);
     }
 
     public GameDetailsDto findGameById(@NonNull Long id) {

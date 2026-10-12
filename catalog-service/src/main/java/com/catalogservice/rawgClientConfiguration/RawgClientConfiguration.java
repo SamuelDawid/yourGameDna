@@ -13,17 +13,22 @@ import java.util.concurrent.TimeUnit;
 
 public class RawgClientConfiguration {
     @Bean
-    public ErrorDecoder rawgErrorDecoder(){return new RawgErrorDecoder();}
-    @Bean
-    public Retryer retryer(){
-        return new Retryer.Default(100L, TimeUnit.SECONDS.toMillis(2L),3);
+    public ErrorDecoder rawgErrorDecoder() {
+        return new RawgErrorDecoder();
     }
+
     @Bean
-    public RequestInterceptor requestInterceptor(@Value("${rawg.api-key}") String key){
-        return requestTemplate -> requestTemplate.query("key",key);
+    public Retryer retryer() {
+        return new Retryer.Default(100L, TimeUnit.SECONDS.toMillis(2L), 3);
     }
+
     @Bean
-    Logger.Level feignLoggerLevel(){
+    public RequestInterceptor requestInterceptor(@Value("${rawg.api-key}") String key) {
+        return requestTemplate -> requestTemplate.query("key", key);
+    }
+
+    @Bean
+    Logger.Level feignLoggerLevel() {
         return Logger.Level.NONE;
     }
 }

@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -23,12 +22,17 @@ public interface RawgMapper {
             expression = "java((int) Math.ceil((double) pageResponse.count() / pageable.getPageSize()))")
     PageDto<GameDto> toGamePage(RawgPageResponse<RawgGameDto> pageResponse, Pageable pageable);
 
-    default List<String> platforms(List<RawgPlatformDto> dto){
-        if(dto == null){ return List.of();}
+    default List<String> platforms(List<RawgPlatformDto> dto) {
+        if (dto == null) {
+            return List.of();
+        }
         return dto.stream().map(d -> d.platform().name()).toList();
     }
-    default List<String> genres(List<RawgGenresDto> dto){
-        if(dto == null){ return List.of();}
+
+    default List<String> genres(List<RawgGenresDto> dto) {
+        if (dto == null) {
+            return List.of();
+        }
         return dto.stream().map(RawgGenresDto::name).toList();
     }
 }
