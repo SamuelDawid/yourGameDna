@@ -9,7 +9,8 @@ public record RawgGameDto(
         Long id,
         String name,
         LocalDate released,
-        String background_image,
+        @JsonProperty("background_image")
+        String imageUrl,
         String rating,
         @JsonProperty("description_raw")
         String description,
