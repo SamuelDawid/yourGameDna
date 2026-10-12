@@ -9,12 +9,11 @@ import org.springframework.data.domain.Pageable;
 @Mapper(componentModel = "spring")
 public interface RawgMapper {
     @Mapping(target = "rawgId", source = "id")
-    @Mapping(target = "imageUrl", source = "background_image")
     GameDetailsDto toGameDetailsDto(RawgGameDto dto);
 
     @Mapping(target = "rawgId", source = "id")
-    @Mapping(target = "imageUrl", source = "background_image")
     GameDto toGameDto(RawgGameDto dto);
+
     @Mapping(target = "content", source = "pageResponse.results")
     @Mapping(target = "totalElements", source = "pageResponse.count")
     @Mapping(target = "totalPages",
