@@ -2,9 +2,10 @@ package com.catalogservice.dto;
 
 import java.util.List;
 
-public record RawgPageResponse(
-        int count,
+public record RawgPageResponse<T>(
+        long count,
         String next,
-        List<RawgGameDto> results
+        String previous,
+        List<T> results
 ) {
 }
