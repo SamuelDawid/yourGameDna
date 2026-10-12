@@ -1,9 +1,6 @@
 package com.catalogservice.service;
 
-import com.catalogservice.dto.GameDetailsDto;
-import com.catalogservice.dto.GameDto;
-import com.catalogservice.dto.RawgGameDto;
-import com.catalogservice.dto.RawgPageResponse;
+import com.catalogservice.dto.*;
 import com.catalogservice.exceptions.CatalogServiceException;
 import com.catalogservice.mappers.RawgMapper;
 import com.catalogservice.rawgClient.RawgClient;
@@ -39,10 +36,11 @@ class CatalogServiceTest {
         this.mapper = Mappers.getMapper(RawgMapper.class);
         this.service = new CatalogService(client,mapper);
         threeRawgGameDto = List.of(
-                new RawgGameDto(1L,"GameOne", LocalDate.of(2020,10,10),"someUrl1","3.0","some Description",List.of("Action","Fantasy"),List.of("PC")),
-                new RawgGameDto(1L,"GameOne", LocalDate.of(2022,10,10),"someUrl2","4.0","some Description for game two",List.of("Action","Drama"),List.of("XBOX")),
-                new RawgGameDto(1L,"GameOne", LocalDate.of(2023,10,10),"someUrl3","5.0","some Description for game three",List.of("Sci-fi","Fantasy"),List.of("PLAYSTATION"))
-        );
+                new RawgGameDto(1L,"GameOne", LocalDate.of(2020,10,10),"someUrl1","3.0","some Description",List.of(new RawgGenresDto("Action"),new RawgGenresDto("Fantasy")),List.of(new RawgPlatformDto(new PlatformDto("PC")))),
+                new RawgGameDto(1L,"GameOne", LocalDate.of(2022,10,10),"someUrl2","4.0","some Description for game two",List.of(new RawgGenresDto("Action"),new RawgGenresDto("Drama")),List.of(new RawgPlatformDto(new PlatformDto("XBOX")))),
+                new RawgGameDto(1L,"GameOne", LocalDate.of(2023,10,10),"someUrl3","5.0","some Description for game three",List.of(new RawgGenresDto("Sci-fi"),new RawgGenresDto("Fantasy")),List.of(new RawgPlatformDto(new PlatformDto("PLAYSTATION")))
+        ));
+
     }
 
     @Test
@@ -86,8 +84,8 @@ class CatalogServiceTest {
                 () -> assertEquals(expected.imageUrl(),result.imageUrl()),
                 () -> assertEquals(expected.rating(),result.rating()),
                 () -> assertEquals(expected.description(),result.description()),
-                () -> assertEquals(expected.genres(),result.genres()),
-                () -> assertEquals(expected.platforms(),result.platforms())
+                () -> assertEquals(List.of("Action", "Fantasy"),result.genres()),
+                () -> assertEquals(List.of("PC"),result.platforms())
         );
         verify(client).getGameById(id);
     }
