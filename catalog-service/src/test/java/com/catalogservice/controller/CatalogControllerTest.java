@@ -45,14 +45,14 @@ class CatalogControllerTest {
         PageDto<GameDto> expected = new PageDto<>(gamesDto,pageable.getPageNumber(), pageable.getPageSize(),3,1);
         when(service.findGameByName("Game",pageable)).thenReturn(expected);
         //When + Then
-        mockMvc.perform(get("/games").param("search","Game"))
+        mockMvc.perform(get("/games").param("search","Game").param("page","1").param("pageSize","20"))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.pageSize").value(20),
                         jsonPath("$.totalPages").value(1),
                         jsonPath("$.totalElements").value(3),
                         jsonPath("$.pageNumber").value(1),
-                        jsonPath("$.content[0].id").value(1L),
+                        jsonPath("$.content[0].rawgId").value(1L),
                         jsonPath("$.content[1].name").value("GameTwo")
                 );
         verify(service).findGameByName("Game",pageable);
