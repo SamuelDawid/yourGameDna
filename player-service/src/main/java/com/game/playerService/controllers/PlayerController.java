@@ -1,13 +1,12 @@
 package com.game.playerService.controllers;
 
 import com.game.playerService.dto.CreatePlayerCommand;
-import com.game.playerService.dto.PageDto;
+import com.game.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
