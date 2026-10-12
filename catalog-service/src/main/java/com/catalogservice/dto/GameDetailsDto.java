@@ -10,7 +10,7 @@ public record GameDetailsDto(
         String imageUrl,
         String rating,
         String description,
-        List<Object> genres,
-        List<Object> platforms
+        List<String> genres,
+        List<String> platforms
 ) {
 }

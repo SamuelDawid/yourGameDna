@@ -14,7 +14,7 @@ public record RawgGameDto(
         String rating,
         @JsonProperty("description_raw")
         String description,
-        List<Object> genres,
-        List<Object> platforms
+        List<RawgGenresDto> genres,
+        List<RawgPlatformDto> platforms
 ) {
 }
