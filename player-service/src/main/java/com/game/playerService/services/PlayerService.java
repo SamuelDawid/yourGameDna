@@ -1,7 +1,7 @@
 package com.game.playerService.services;
 
 import com.game.playerService.dto.CreatePlayerCommand;
-import com.game.playerService.dto.PageDto;
+import com.game.dto.PageDto;
 import com.game.playerService.dto.PlayerDto;
 import com.game.playerService.dto.UpdatePlayerCommand;
 import com.game.playerService.exceptions.EmailAlreadyTakenException;
