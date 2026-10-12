@@ -8,11 +8,16 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>player-service</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>player-service</name>
 	<description>Player Service</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.game</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- ===== Web / REST ===== -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

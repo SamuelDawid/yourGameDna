@@ -1,4 +1,4 @@
-package com.game.playerService.dto;
+package com.game.dto;
 
 import org.springframework.data.domain.Page;
 
