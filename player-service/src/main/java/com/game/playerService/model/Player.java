@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +27,9 @@ public class Player {
     @Setter(AccessLevel.NONE)
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "game_entity",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<GameEntity> gameEntityList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

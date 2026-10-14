@@ -42,7 +42,10 @@ public class GameEntity {
     private String review;
     @CreationTimestamp
     private LocalDateTime createdAt;
-
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "game_player",nullable = false, foreignKey = @ForeignKey(name = "fk_game_player"))
+    private Player player;
     @Override
     public boolean equals(Object o){
         if(this == o) return true;
