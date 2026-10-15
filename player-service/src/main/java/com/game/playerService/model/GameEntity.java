@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "gameEntity")
+@Table(name = "game_entity")
 public class GameEntity {
     @Setter(AccessLevel.NONE)
     @Id
@@ -44,16 +44,18 @@ public class GameEntity {
     private LocalDateTime createdAt;
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "game_player",nullable = false, foreignKey = @ForeignKey(name = "fk_game_player"))
+    @JoinColumn(name = "player_id", nullable = false, foreignKey = @ForeignKey(name = "fk_game_player"))
     private Player player;
+
     @Override
-    public boolean equals(Object o){
-        if(this == o) return true;
-        if(!(o instanceof GameEntity entity)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GameEntity entity)) return false;
         return id != null && id.equals(entity.getId());
     }
+
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return getClass().hashCode();
     }
 }

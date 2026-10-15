@@ -28,7 +28,7 @@ public class Player {
     @CreationTimestamp
     private LocalDateTime createdAt;
     @ToString.Exclude
-    @OneToMany(mappedBy = "game_entity",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "player",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<GameEntity> gameEntityList = new ArrayList<>();
 
     @Override

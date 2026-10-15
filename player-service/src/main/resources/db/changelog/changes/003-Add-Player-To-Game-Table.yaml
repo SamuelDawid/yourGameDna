@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: Samuel Dawid
+      changes:
+        - addColumn:
+            tableName: game_entity
+            columns:
+              - column:
+                  name: player_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_game_player
+            baseTableName: game_entity
+            baseColumnNames: pplayer_id
+            referencedTableName: player
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_game_enity_game_player
+            tableName: game_entity
+            columns:
+              - column:
+                  name: player_id
