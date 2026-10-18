@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Samuel Dawid
       changes:
         - addColumn:
-            tableName: game_entity
+            tableName: game_rating
             columns:
               - column:
                   name: player_id
@@ -14,15 +14,13 @@ databaseChangeLog:
 
         - addForeignKeyConstraint:
             constraintName: fk_game_player
-            baseTableName: game_entity
-            baseColumnNames: pplayer_id
+            baseTableName: game_rating
+            baseColumnNames: player_id
             referencedTableName: player
             referencedColumnNames: id
             onDelete: CASCADE
 
-        - createIndex:
-            indexName: idx_game_enity_game_player
-            tableName: game_entity
-            columns:
-              - column:
-                  name: player_id
+        - addUniqueConstraint:
+            tableName: game_rating
+            columnNames: player_id, rawg_id
+            constraintName: uk_game_rating_player_game
