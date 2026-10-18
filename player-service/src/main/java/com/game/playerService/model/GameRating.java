@@ -2,6 +2,8 @@ package com.game.playerService.model;
 
 import com.game.playerService.enums.GameStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,29 +16,30 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "game_entity")
-public class GameEntity {
+@Table(name = "game_rating",uniqueConstraints = @UniqueConstraint(name = "uk_game_rating_player_game",columnNames = {"player_id","rawg_id"}))
+public class GameRating {
     @Setter(AccessLevel.NONE)
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String gameName;
     @Setter(AccessLevel.NONE)
-    @Column(nullable = false)
+    @Column(name = "rawg_id",nullable = false)
     private Long rawgId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private GameStatus status = GameStatus.NONE;
-    @Size(min = 1, max = 10)
+    @Min(1) @Max(10)
+    @Column(nullable = true)
     private Integer rating;
-    @Size(min = 1, max = 10)
+    @Min(1) @Max(10)
     private Integer gamePlayRating;
-    @Size(min = 1, max = 10)
+    @Min(1) @Max(10)
     private Integer graphicsRating;
-    @Size(min = 1, max = 10)
+    @Min(1) @Max(10)
     private Integer storyRating;
-    @Size(min = 1, max = 10)
+    @Min(1) @Max(10)
     private Integer monetizationRating;
     @Size(max = 2000)
     private String review;
@@ -50,7 +53,7 @@ public class GameEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GameEntity entity)) return false;
+        if (!(o instanceof GameRating entity)) return false;
         return id != null && id.equals(entity.getId());
     }
 
