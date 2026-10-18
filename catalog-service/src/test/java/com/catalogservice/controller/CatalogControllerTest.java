@@ -1,7 +1,7 @@
 package com.catalogservice.controller;
 
-import com.catalogservice.dto.GameDetailsDto;
-import com.catalogservice.dto.GameDto;
+import com.game.dto.GameDetailsDto;
+import com.game.dto.GameDto;
 import com.catalogservice.exceptions.CatalogServiceException;
 import com.catalogservice.service.CatalogService;
 import com.game.dto.PageDto;

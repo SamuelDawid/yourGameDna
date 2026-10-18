@@ -1,4 +1,4 @@
-package com.catalogservice.dto;
+package com.game.dto;
 
 import java.time.LocalDate;
 import java.util.List;
