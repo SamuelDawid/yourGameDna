@@ -1,7 +1,7 @@
 package com.catalogservice.service;
 
-import com.catalogservice.dto.GameDetailsDto;
-import com.catalogservice.dto.GameDto;
+import com.game.dto.GameDetailsDto;
+import com.game.dto.GameDto;
 import com.catalogservice.dto.RawgGameDto;
 import com.catalogservice.dto.RawgPageResponse;
 import com.catalogservice.mappers.RawgMapper;
