@@ -29,7 +29,7 @@ public class Player {
     private LocalDateTime createdAt;
     @ToString.Exclude
     @OneToMany(mappedBy = "player",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<GameEntity> gameEntityList = new ArrayList<>();
+    private List<GameRating> gameRatingList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
