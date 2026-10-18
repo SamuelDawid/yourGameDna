@@ -1,6 +1,8 @@
 package com.catalogservice.mappers;
 
 import com.catalogservice.dto.*;
+import com.game.dto.GameDetailsDto;
+import com.game.dto.GameDto;
 import com.game.dto.PageDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
