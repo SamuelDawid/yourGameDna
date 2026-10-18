@@ -1,0 +1,264 @@
+.page {
+  display: grid;
+  align-content: start;
+  gap: 28px;
+  padding-top: clamp(40px, 13vh, 150px);
+  padding-bottom: 56px;
+  transition: padding-top 0.35s ease;
+}
+
+.page[data-active] {
+  padding-top: 28px;
+}
+
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.heading {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows 0.35s ease,
+    opacity 0.25s ease;
+}
+
+.page[data-active] .heading {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.headingInner {
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding-bottom: 8px;
+}
+
+.title {
+  font-size: clamp(28px, 5vw, 54px);
+  line-height: 1.08;
+  max-width: 17ch;
+}
+
+.gradient {
+  background: linear-gradient(100deg, #b3a8ff 10%, #5fb4ff 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lead {
+  max-width: 52ch;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.searchForm {
+  position: relative;
+  width: min(720px, 100%);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 62px;
+  padding: 0 58px 0 54px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: rgba(26, 31, 49, 0.85);
+  font-size: 17px;
+  box-shadow:
+    0 20px 50px -28px rgba(109, 92, 240, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: var(--text-faint);
+}
+
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow:
+    var(--ring),
+    0 20px 50px -24px rgba(109, 92, 240, 0.9);
+}
+
+.searchForm:focus-within .searchIcon {
+  color: var(--accent);
+}
+
+.kbd,
+.clear,
+.searchStatus {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.clear {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-muted);
+}
+
+.clear:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.searchStatus {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+}
+
+.pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(139, 123, 255, 0.6);
+  animation: pulse 1s ease-out infinite;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  max-width: 720px;
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.chip {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(19, 23, 38, 0.6);
+  color: var(--text-muted);
+  font-size: 13px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.chip:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.teaser {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 123, 255, 0.3);
+  background: var(--accent-soft);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.teaser:hover {
+  text-decoration: none;
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.teaser > svg:first-child {
+  color: var(--accent);
+}
+
+.teaser strong {
+  color: var(--text);
+}
+
+.results {
+  display: grid;
+  gap: 16px;
+}
+
+.summary {
+  font-size: 14px;
+  color: var(--text-faint);
+}
+
+.summary strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+  gap: 16px;
+  transition: opacity 0.2s ease;
+}
+
+.grid[data-stale] {
+  opacity: 0.5;
+}
+
+.cell {
+  display: grid;
+  animation: fade-in 0.25s ease-out both;
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+@keyframes pulse {
+  to {
+    box-shadow: 0 0 0 10px rgba(139, 123, 255, 0);
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .searchInput {
+    height: 54px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+}

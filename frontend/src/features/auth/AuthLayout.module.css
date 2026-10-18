@@ -1,0 +1,149 @@
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px clamp(24px, 5vw, 64px);
+  border-right: 1px solid var(--border);
+  background:
+    radial-gradient(800px 500px at 0% 0%, rgba(109, 92, 240, 0.22), transparent 65%),
+    radial-gradient(600px 400px at 100% 100%, rgba(57, 135, 229, 0.14), transparent 65%);
+  overflow: hidden;
+}
+
+.pitch {
+  display: grid;
+  gap: 18px;
+  max-width: 520px;
+}
+
+.headline {
+  font-size: clamp(34px, 4.4vw, 56px);
+  line-height: 1.05;
+}
+
+.gradient {
+  background: linear-gradient(100deg, #b3a8ff 10%, #5fb4ff 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 46ch;
+}
+
+.helix {
+  margin-inline: calc(clamp(24px, 5vw, 64px) * -1);
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
+.genes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.genes li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(19, 23, 38, 0.7);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 40px var(--gutter);
+}
+
+.card {
+  display: grid;
+  gap: 22px;
+  width: min(420px, 100%);
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  animation: fade-in 0.25s ease-out;
+}
+
+.cardHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: var(--text-muted);
+}
+
+.footer {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .brand {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 24px var(--gutter) 20px;
+    gap: 20px;
+  }
+
+  .pitch {
+    display: none;
+  }
+
+  .helix {
+    margin-inline: calc(var(--gutter) * -1);
+  }
+
+  .genes {
+    display: none;
+  }
+
+  .main {
+    justify-content: flex-start;
+    padding-top: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 24px 20px;
+  }
+}

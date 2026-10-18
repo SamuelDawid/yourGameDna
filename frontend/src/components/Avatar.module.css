@@ -1,0 +1,14 @@
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  background: linear-gradient(140deg, hsl(var(--hue) 70% 58%), hsl(calc(var(--hue) + 50) 65% 40%));
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 3.5px hsl(var(--hue) 70% 62% / 0.55);
+}

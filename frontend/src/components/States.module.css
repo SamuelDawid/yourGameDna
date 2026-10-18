@@ -1,0 +1,84 @@
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-strong);
+  text-align: center;
+  animation: fade-in 0.2s ease-out;
+}
+
+.error {
+  border-style: solid;
+  border-color: rgba(255, 122, 122, 0.25);
+  background: linear-gradient(180deg, rgba(255, 122, 122, 0.06), transparent);
+}
+
+.compact {
+  flex-direction: row;
+  text-align: left;
+  padding: 16px 18px;
+}
+
+.compact .text {
+  flex: 1;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.error .icon {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.text {
+  display: grid;
+  gap: 4px;
+  max-width: 520px;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: 650;
+  font-size: 15px;
+}
+
+.compact .title {
+  justify-content: flex-start;
+}
+
+.status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.message {
+  color: var(--text-muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  color: var(--text-faint);
+  font-size: 13px;
+}

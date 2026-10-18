@@ -1,0 +1,58 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.identity {
+  flex: 1;
+  min-width: 220px;
+  display: grid;
+  gap: 4px;
+}
+
+.name {
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.email {
+  color: var(--text-faint);
+  font-size: 14px;
+}
+
+.bio {
+  margin-top: 6px;
+  max-width: 70ch;
+  color: var(--text-muted);
+  white-space: pre-line;
+}
+
+.addBio {
+  justify-self: start;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .header {
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .actions {
+    width: 100%;
+  }
+}

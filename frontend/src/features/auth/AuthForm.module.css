@@ -1,0 +1,9 @@
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 4px;
+}

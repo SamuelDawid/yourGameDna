@@ -1,0 +1,146 @@
+.field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.label {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.lg .label {
+  font-size: 15px;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scale {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 3px;
+  max-width: 420px;
+}
+
+.segment {
+  position: relative;
+  height: 26px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    transform 0.12s ease;
+}
+
+.lg .segment {
+  height: 32px;
+}
+
+.segment:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.segment:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.segment:hover {
+  transform: translateY(-1px);
+}
+
+.segment[data-filled] {
+  background: var(--rating-color);
+}
+
+.segment[data-filled][data-preview] {
+  background: color-mix(in srgb, var(--rating-color) 70%, white 10%);
+}
+
+.segment:has(input:focus-visible) {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.value {
+  min-width: 52px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.lg .value {
+  font-size: 26px;
+}
+
+.max {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-faint);
+  margin-left: 1px;
+}
+
+.clear {
+  flex: none;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.clear:hover:not(:disabled) {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.clear:disabled {
+  visibility: hidden;
+}
+
+.error {
+  font-size: 12.5px;
+  color: var(--danger);
+}
+
+@media (max-width: 480px) {
+  .row {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+  .scale {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .value {
+    min-width: 0;
+    text-align: left;
+  }
+}
