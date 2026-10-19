@@ -32,13 +32,13 @@ public class GameRatingService {
     private final GameRatingMapper mapper;
 
     @Transactional
-    public PageDto<GameRatingDto> findAllByPlayerId(Long id, Pageable pageable) {
+    public PageDto<GameRatingDto> findAllByPlayerId(@NonNull Long id, Pageable pageable) {
         Player player = findPlayerOrThrow(id);
         return PageDto.from(repository.findAllByPlayer(player, pageable).map(mapper::toDto));
     }
 
     @Transactional
-    public GameRatingDto create(Long id, CreateGameRatingCommand command) {
+    public GameRatingDto create(@NonNull Long id, CreateGameRatingCommand command) {
         log.info("Creating game rating -> {}", command);
         Player player = findPlayerOrThrow(id);
         if (repository.existsByPlayerIdAndRawgId(id, command.rawgId())) {
@@ -60,7 +60,7 @@ public class GameRatingService {
     }
 
     @Transactional
-    public GameRatingDto update(Long playerId ,Long rawgId, UpdateGameRatingCommand command) {
+    public GameRatingDto update(@NonNull Long playerId ,@NonNull Long rawgId, UpdateGameRatingCommand command) {
         log.info("Updating game rating {} for player {}", rawgId,playerId);
         findPlayerOrThrow(playerId);
         GameRating gameRating = findOrThrow(rawgId,playerId);
@@ -70,7 +70,7 @@ public class GameRatingService {
     }
 
     @Transactional
-    public void delete(Long playerId, Long rawgId) {
+    public void delete(@NonNull Long playerId,@NonNull Long rawgId) {
         GameRating gameRating = findOrThrow(rawgId,playerId);
         repository.delete(gameRating);
     }
