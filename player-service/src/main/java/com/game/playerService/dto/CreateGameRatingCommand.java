@@ -1,15 +1,11 @@
 package com.game.playerService.dto;
 
 import com.game.playerService.enums.GameStatus;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.NonNull;
+import jakarta.validation.constraints.*;
 
 public record CreateGameRatingCommand(
-        @NonNull Long rawgId,
-        @NotBlank GameStatus status,
+        @NotNull Long rawgId,
+        @NotNull GameStatus status,
         @Min(1) @Max(10) Integer rating,
         @Min(1) @Max(10) Integer gamePlayRating,
         @Min(1) @Max(10) Integer graphicsRating,
