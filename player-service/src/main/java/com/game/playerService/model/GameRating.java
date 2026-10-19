@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "game_rating",uniqueConstraints = @UniqueConstraint(name = "uk_game_rating_player_game",columnNames = {"player_id","rawg_id"}))
 public class GameRating {
     @Setter(AccessLevel.NONE)
