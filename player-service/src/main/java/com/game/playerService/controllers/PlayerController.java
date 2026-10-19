@@ -1,7 +1,7 @@
 package com.game.playerService.controllers;
 
-import com.game.playerService.dto.*;
 import com.game.dto.PageDto;
+import com.game.playerService.dto.*;
 import com.game.playerService.services.GameRatingService;
 import com.game.playerService.services.PlayerService;
 import jakarta.validation.Valid;
@@ -23,18 +23,20 @@ public class PlayerController {
     }
 
     @GetMapping("/{playerId}/library")
-    public PageDto<GameRatingDto> findAllByPlayerId(@PathVariable("playerId") Long id, Pageable pageable){
-        return gameRatingService.findAllByPlayerId(id,pageable);
+    public PageDto<GameRatingDto> findAllByPlayerId(@PathVariable("playerId") Long id, Pageable pageable) {
+        return gameRatingService.findAllByPlayerId(id, pageable);
     }
 
     @GetMapping("/{id}")
     public PlayerDto findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
+
     @PostMapping("/{playerId}/library")
-    public GameRatingDto create(@PathVariable("playerId") Long id,@Valid CreateGameRatingCommand command){
+    public GameRatingDto create(@PathVariable("playerId") Long id, @Valid @RequestBody CreateGameRatingCommand command) {
         return gameRatingService.create(id, command);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PlayerDto create(@Valid @RequestBody CreatePlayerCommand command) {
@@ -45,17 +47,20 @@ public class PlayerController {
     public PlayerDto update(@PathVariable("id") Long id, @Valid @RequestBody UpdatePlayerCommand command) {
         return service.update(id, command);
     }
+
     @PatchMapping("/{playerId}/libray/{rawgId}")
-    public GameRatingDto updateGameRating(@PathVariable("playerId") Long playerId,@PathVariable("rawgId") Long rawgId, @Valid UpdateGameRatingCommand command){
-        return gameRatingService.update(playerId,rawgId,command);
+    public GameRatingDto updateGameRating(@PathVariable("playerId") Long playerId, @PathVariable("rawgId") Long rawgId, @Valid @RequestBody UpdateGameRatingCommand command) {
+        return gameRatingService.update(playerId, rawgId, command);
     }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
     @DeleteMapping("/{playerId}/libray/{rawgId}")
-    void deleteGameRating(@PathVariable("playerId") Long playerId,@PathVariable("rawgId") Long rawgId){
+    void deleteGameRating(@PathVariable("playerId") Long playerId, @PathVariable("rawgId") Long rawgId) {
         gameRatingService.delete(playerId, rawgId);
     }
 }
