@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @SpringBootApplication
-public class YourGameDnaApplication {
+public class PlayerServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(YourGameDnaApplication.class, args);
+		SpringApplication.run(PlayerServiceApplication.class, args);
 	}
 
 }

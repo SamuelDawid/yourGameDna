@@ -1,6 +1,6 @@
 spring:
   application:
-    name: your-game-dna
+    name: player-service
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
