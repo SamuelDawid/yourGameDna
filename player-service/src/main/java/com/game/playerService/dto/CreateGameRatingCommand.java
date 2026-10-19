@@ -9,7 +9,6 @@ import lombok.NonNull;
 
 public record CreateGameRatingCommand(
         @NonNull Long rawgId,
-        @NonNull Long playerId,
         @NotBlank GameStatus status,
         @Min(1) @Max(10) Integer rating,
         @Min(1) @Max(10) Integer gamePlayRating,

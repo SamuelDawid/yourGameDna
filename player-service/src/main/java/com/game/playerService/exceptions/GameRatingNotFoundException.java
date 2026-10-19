@@ -3,7 +3,7 @@ package com.game.playerService.exceptions;
 import org.springframework.http.HttpStatus;
 
 public class GameRatingNotFoundException extends PlayerServiceException {
-    public GameRatingNotFoundException(Long id) {
-        super("Game review with id :"+id+" not found", HttpStatus.NOT_FOUND);
+    public GameRatingNotFoundException(Long playerId, Long rawgId) {
+        super("Game review for player :" + playerId + "with rawId" + rawgId + " not found", HttpStatus.NOT_FOUND);
     }
 }
